@@ -15,6 +15,8 @@ class rUBot:
         self._forwardSpeed = rospy.get_param("~forward_speed", 0.2)
         self._backwardSpeed = rospy.get_param("~backward_speed", -0.1)
         self._rotationSpeed = rospy.get_param("~rotation_speed", 1.0)
+        self._lateralSpeed = rospy.get_param("~lateral_speed", 0.2)
+
 
         # Initialize publishers and subscribers
         self._msg = Twist()
@@ -63,14 +65,21 @@ class rUBot:
 
         rospy.loginfo("Closest distance of %5.2f m at %5.1f degrees.", closestDistance, angleClosestDistance)
 
-        # Behavior based on distance
         if closestDistance < self._distanceLaser and -80 < angleClosestDistance < 80:
-            self._msg.linear.x = self._backwardSpeed * self._speedFactor
-            self._msg.angular.z = -self.__sign(angleClosestDistance) * self._rotationSpeed * self._speedFactor
-            rospy.logwarn("Within laser distance threshold. Rotating the robot (z=%4.1f)...", self._msg.angular.z)
+            # Primero intenta moverse lateralmente antes de girar
+            if angleClosestDistance > 0:  # Si el obstáculo está más a la derecha, moverse a la izquierda
+                self._msg.linear.y = self._lateralSpeed * self._speedFactor
+            else:  # Si está más a la izquierda, moverse a la derecha
+                self._msg.linear.y = -self._lateralSpeed * self._speedFactor
+
+            self._msg.linear.x = 0  # No avanza hacia atrás
+            self._msg.angular.z = self._rotationSpeed * self._speedFactor  # Rotar en el lugar
+            rospy.logwarn("Pared detectada. Intentando esquivar lateralmente antes de girar...")
         else:
             self._msg.linear.x = self._forwardSpeed * self._speedFactor
+            self._msg.linear.y = 0  # Detener movimiento lateral si el camino está despejado
             self._msg.angular.z = 0
+
 
     @staticmethod
     def __sign(val):
