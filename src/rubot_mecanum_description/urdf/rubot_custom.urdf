@@ -213,7 +213,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://rubot_mecanum_description/meshes/rubot/number2.stl" scale="0.0008 0.0008 0.0008"/>
+        <mesh filename="package://rubot_mecanum_description/meshes/rubot/number3.stl" scale="0.0008 0.0008 0.0008"/>
       </geometry>
       <material name="black"/>
     </visual>
