@@ -18,7 +18,7 @@ class rUBot:
 
         # Initialize publishers and subscribers
         self._msg = Twist()
-        self._cmdVel = rospy.Publisher("/cmd_vel", Twist, queue_size=2)
+        self._cmdVel = rospy.Publisher("/cmd_vel", Twist, queue_size=10)
         rospy.Subscriber("/scan", LaserScan, self.callbackLaser)
         rospy.on_shutdown(self.shutdown)
 
@@ -97,7 +97,6 @@ if __name__ == '__main__':
     try:
         rUBot1 = rUBot()
         rUBot1.start()
-        rospy.spin()
     except rospy.ROSInterruptException:
         pass
     finally:

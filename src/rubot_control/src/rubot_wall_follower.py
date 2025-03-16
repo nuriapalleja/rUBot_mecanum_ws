@@ -44,35 +44,29 @@ def clbk_laser(msg):
 
 def take_action(regions):
     msg = Twist()
-    linear_x = 0
+    linear_x = vx
     angular_z = 0
+    state_description = ""
 
-    state_description = ''
+    wall_distance = 1.2 * d  # Distancia deseada al muro
 
-    if regions['front'] > d and regions['fright'] > 2*d and regions['right'] > 2*d and regions['bright'] > 2*d:
-        state_description = 'case 1 - nothing'
-        linear_x = vx
-        angular_z = 0
-    elif regions['front'] < d:
-        state_description = 'case 2 - front'
+    if regions['front'] < d:  
+        state_description = "Obstacle ahead → turning left"
         linear_x = 0
-        angular_z = wz
-    elif regions['fright'] < d:
-        state_description = 'case 3 - fright'
-        linear_x = 0
-        angular_z = wz
-    elif regions['front'] > d and regions['right'] < d:
-        state_description = 'case 4 - right'
-        linear_x = vx
-        angular_z = 0
-    elif regions['bright'] < d:
-        state_description = 'case 5 - bright'
-        linear_x = 0
-        angular_z = -wz
+        angular_z = wz  
+
+    elif regions['right'] < wall_distance:  
+        state_description = "Too close to the wall → adjusting outward"
+        angular_z = wz * 0.3  # Suave ajuste para alejarse
+
+    elif regions['right'] > 1.8 * d:  
+        state_description = "Too far from the wall → adjusting inward"
+        angular_z = -wz * 0.2  # Movimiento suave hacia la pared
+
     else:
-        state_description = 'case 6 - Far'
-        linear_x = vx
-        angular_z = -wz
+        state_description = "Following the wall"
+        linear_x = vx  
+        angular_z = 0  
 
     rospy.loginfo(state_description)
     msg.linear.x = linear_x
