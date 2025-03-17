@@ -41,38 +41,56 @@ def clbk_laser(msg):
 
     take_action(regions)
 
-
 def take_action(regions):
     msg = Twist()
-    linear_x = vx
-    angular_z = 0
     state_description = ""
 
-    wall_distance = 1.2 * d  # Distancia deseada al muro
-
-    if regions['front'] < d:  
-        state_description = "Obstacle ahead → turning left"
-        linear_x = 0
-        angular_z = wz  
-
-    elif regions['right'] < wall_distance:  
-        state_description = "Too close to the wall → adjusting outward"
-        angular_z = wz * 0.3  # Suave ajuste para alejarse
-
-    elif regions['right'] > 1.8 * d:  
-        state_description = "Too far from the wall → adjusting inward"
-        angular_z = -wz * 0.2  # Movimiento suave hacia la pared
-
+    if regions['front'] > d and regions['fright'] > d * 2 and regions['right'] > d * 2 and regions['bright'] > d * 2:
+        state_description = 'case 1 - nothing'
+        msg = go_ahead()
+    elif regions['front'] < d:
+        state_description = 'case 2 - front'
+        msg = turn_left()
+    elif regions['fright'] < d and regions['right'] > d:
+        state_description = 'case 3 - fright'
+        msg = turn_left()
+    elif regions['fright'] < d and regions['fright'] < regions['right'] * 2: # controla la distancia horizontal
+        state_description = 'case 3 - fright'
+        msg = turn_left()
+    elif regions['right'] < d:
+        state_description = 'case 4 - right'
+        msg = go_ahead()
+    elif regions['bright'] < d:
+        state_description = 'case 5 - bright'
+        msg = turn_right()
     else:
-        state_description = "Following the wall"
-        linear_x = vx  
-        angular_z = 0  
+        state_description = 'case 6 - Far'
+        msg = reorient()
 
     rospy.loginfo(state_description)
-    msg.linear.x = linear_x
-    msg.angular.z = angular_z
     pub.publish(msg)
     rate.sleep()
+
+def go_ahead():
+    msg = Twist()
+    msg.linear.x = vx * vf
+    return msg
+
+def turn_left():
+    msg = Twist()
+    msg.angular.z = wz * vf
+    return msg
+
+def turn_right():
+    msg = Twist()
+    msg.angular.z = -2*wz * vf
+    return msg
+
+def reorient():
+    msg = Twist()
+    msg.linear.x = vx/2 * vf
+    msg.angular.z = -2*wz * vf
+    return msg
 
 def shutdown():
     msg = Twist()
