@@ -42,8 +42,8 @@ class rUBot:
         if not self.__isScanRangesLengthCorrectionFactorCalculated:
             self.__scanRangesLengthCorrectionFactor = int(len(scan.ranges) / 360)
             self.__isScanRangesLengthCorrectionFactorCalculated = True
-            rospy.loginfo("Scan Ranges correction factor: %5.2f, number of points: %d",
-                          self.__scanRangesLengthCorrectionFactor, len(scan.ranges))
+            #rospy.loginfo("Scan Ranges correction factor: %5.2f, number of points: %d",
+                         # self.__scanRangesLengthCorrectionFactor, len(scan.ranges))
 
         # Find the closest distance within valid scan range
         closestDistance, elementIndex = min(
@@ -51,11 +51,11 @@ class rUBot:
             if scan.range_min < val < scan.range_max
         )
         angleClosestDistance = elementIndex / self.__scanRangesLengthCorrectionFactor
-        rospy.loginfo("Degree div factor: %5.2f", angleClosestDistance)
+        #rospy.loginfo("Degree div factor: %5.2f", angleClosestDistance)
 
         # Normalize the angle
         angleClosestDistance = self.__wrapAngle(angleClosestDistance)
-        rospy.loginfo("Degree wrapped: %5.2f", angleClosestDistance)
+        #rospy.loginfo("Degree wrapped: %5.2f", angleClosestDistance)
 
         # Adjust angle to be within [-180, 180] degrees
         if angleClosestDistance > 0:
@@ -63,7 +63,7 @@ class rUBot:
         else:
             angleClosestDistance += 180
 
-        rospy.loginfo("Closest distance of %5.2f m at %5.1f degrees.", closestDistance, angleClosestDistance)
+        #rospy.loginfo("Closest distance of %5.2f m at %5.1f degrees.", closestDistance, angleClosestDistance)
 
         if closestDistance < self._distanceLaser and -80 < angleClosestDistance < 80:
             # Primero intenta moverse lateralmente antes de girar
@@ -74,7 +74,7 @@ class rUBot:
 
             self._msg.linear.x = 0  # No avanza hacia atrás
             self._msg.angular.z = self._rotationSpeed * self._speedFactor  # Rotar en el lugar
-            rospy.logwarn("Pared detectada. Intentando esquivar lateralmente antes de girar...")
+            #rospy.logwarn("Pared detectada. Intentando esquivar lateralmente antes de girar...")
         else:
             self._msg.linear.x = self._forwardSpeed * self._speedFactor
             self._msg.linear.y = 0  # Detener movimiento lateral si el camino está despejado

@@ -1,6 +1,6 @@
 <launch>
     <!-- Navigation Program -->
-    <arg name="distance_laser" default="0.3" />
+    <arg name="distance_laser" default="0.4" />
     <arg name="speed_factor" default="0.1" />
     <arg name="forward_speed" default="1" />
     <arg name="lateral_speed" default="1" />

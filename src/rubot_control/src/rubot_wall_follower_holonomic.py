@@ -110,7 +110,7 @@ class WallFollower:
             linear_x = self.vx * self.vf
             linear_y = 0
 
-        rospy.loginfo(state_description)
+        ##rospy.loginfo(state_description)
         msg.linear.x = linear_x
         msg.linear.y = linear_y
         self.pub.publish(msg)
@@ -125,7 +125,7 @@ class WallFollower:
         msg.angular.z = 0
         self.pub.publish(msg)
         self.rate.sleep()
-        rospy.loginfo("Stop rUBot")
+        #rospy.loginfo("Stop rUBot")
 
 if __name__ == '__main__':
     try:
