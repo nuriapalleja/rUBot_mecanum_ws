@@ -141,25 +141,6 @@ class WallFollower:
             rospy.loginfo('case 6 - Far')
             self.reorient()
 
-        """
-        # Case 1 - wall is in front
-        if self.regions['front'] < self.d:
-            self.turn_left()
-        # Case 2 - wall is on front - right
-        elif self.regions['fright'] < self.d and self.regions['fright'] < self.regions['right']:
-            self.turn_left()
-        # Case 3 - wall is on right    
-        elif self.regions['right'] < self.d and self.regions['right'] < self.regions['bright']:
-            self.go_ahead()
-        # Case 4 - wall is on back - right
-        elif self.regions['bright'] < self.d:
-            self.turn_right()
-        # Case 5 - wall is getting far
-        else:
-            self.reorient()
-        """
-
-
 
     def go_ahead(self):
         msg = Twist()

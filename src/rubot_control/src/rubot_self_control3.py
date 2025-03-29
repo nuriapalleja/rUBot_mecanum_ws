@@ -69,7 +69,7 @@ class rUBot:
             self.closest_angle = angleClosestDistance
             self.last_distance = closest_distance
             self.last_angle = angleClosestDistance
-            rospy.loginfo(f"Closest distance: {closest_distance:.2f} meters and Angle: {angleClosestDistance:.1f} degrees")
+            #rospy.loginfo(f"Closest distance: {closest_distance:.2f} meters and Angle: {angleClosestDistance:.1f} degrees")
 
     def control_loop(self):
         while not rospy.is_shutdown():

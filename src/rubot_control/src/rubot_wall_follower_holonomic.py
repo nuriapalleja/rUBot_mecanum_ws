@@ -55,7 +55,6 @@ class WallFollower:
         # Combina los dos rangos y obtiene el valor mínimo
         back_value = min(min(back_range_1), min(back_range_2))
 
-
         # Ahora usa 'back_value' en la asignación de la variable 'regions'
         regions = {
             'bright': min(min(msg.ranges[bright_min:bright_max]), 3),
